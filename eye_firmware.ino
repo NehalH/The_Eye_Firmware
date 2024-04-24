@@ -41,9 +41,15 @@ boolean takeNewPhoto = false;
 #define PCLK_GPIO_NUM     22
 #define FLASH_GPIO_NUM    4 // Built-in LED Flash pin
 
+// Button pin
+#define BUTTON_PIN 2
+
 void setup() {
   // Serial port for debugging purposes
   Serial.begin(115200);
+
+  // Setup button pin
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
 
   // Setup ESP32 as Access Point
   WiFi.softAP(ssid, password);
@@ -124,11 +130,12 @@ void setup() {
 }
 
 void loop() {
-  if (takeNewPhoto) {
+
+  if ( digitalRead(BUTTON_PIN) == LOW || takeNewPhoto ) {
     capturePhotoSaveSpiffs();
     takeNewPhoto = false;
   }
-  delay(1);
+  delay(10);
 }
 
 // Check if photo capture was successful
