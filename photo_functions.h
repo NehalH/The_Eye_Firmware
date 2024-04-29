@@ -7,6 +7,7 @@
 
 extern boolean takeNewPhoto;
 #define FILE_PHOTO "/photo.jpg"
+extern bool buttonPressed;
 
 bool checkPhoto(fs::FS &fs);
 void capturePhotoSaveSpiffs(void);

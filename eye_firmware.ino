@@ -8,9 +8,11 @@
 #include "SPIFFS.h"
 
 boolean takeNewPhoto;
+boolean buttonPressed;
 
 
 AsyncWebServer server(80);
+AsyncWebSocket ws("/ws");
 
 const char* ssid = "ESP32_AP";
 const char* password = "password";
@@ -47,13 +49,18 @@ void setup() {
 
   // Setup server
   setupServer();
+  initWebSocket();
 }
 
 void loop() {
   // Check button press or command to take a new photo
-  if (digitalRead(BUTTON_PIN) == LOW || takeNewPhoto) {
+  if (takeNewPhoto) {
     capturePhotoSaveSpiffs();
     takeNewPhoto = false;
+  }
+  if (digitalRead(BUTTON_PIN) == LOW ){
+    buttonPressed = true;
+    capturePhotoSaveSpiffs();
   }
   delay(10);
 }

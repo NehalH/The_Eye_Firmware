@@ -1,5 +1,6 @@
 #include "photo_functions.h"
 #include "SPIFFS.h"
+#include "server_setup.h"
 
 bool checkPhoto(fs::FS &fs) {
   File f_pic = fs.open(FILE_PHOTO);
@@ -44,6 +45,11 @@ void capturePhotoSaveSpiffs( void ) {
     // Close the file
     file.close();
     esp_camera_fb_return(fb);
+
+    if(buttonPressed){
+      notifyClients(fb->buf, fb->len);
+      buttonPressed = false;
+    }
 
     // check if file has been correctly saved in SPIFFS
     ok = checkPhoto(SPIFFS);
