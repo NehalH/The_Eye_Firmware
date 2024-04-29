@@ -62,5 +62,5 @@ void loop() {
     buttonPressed = true;
     capturePhotoSaveSpiffs();
   }
-  delay(10);
+  delay(1000);
 }
