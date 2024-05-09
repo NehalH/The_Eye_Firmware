@@ -8,13 +8,14 @@ bool checkPhoto(fs::FS &fs) {
   return (pic_sz > 100);
 }
 
-void capturePhotoSaveSpiffs( void ) {
+void capturePhotoSaveSpiffs() {
+  
   // Turn on flash
   pinMode(FLASH_GPIO_NUM, OUTPUT);
   digitalWrite(FLASH_GPIO_NUM, HIGH);
 
   camera_fb_t * fb = NULL; // pointer
-  bool ok = 0; // Boolean indicating if the picture has been taken correctly
+  bool ok = false; // Boolean indicating if the picture has been taken correctly
 
   do {
     // Take a photo with the camera
@@ -46,15 +47,20 @@ void capturePhotoSaveSpiffs( void ) {
     file.close();
     esp_camera_fb_return(fb);
 
-    if(buttonPressed){
-      notifyClients(fb->buf, fb->len);
-      buttonPressed = false;
-    }
-
-    // check if file has been correctly saved in SPIFFS
+    // Check if file has been correctly saved in SPIFFS
     ok = checkPhoto(SPIFFS);
-  } while ( !ok );
+  } while (!ok);
+
+  if (buttonPressed) {
+    notifyClients(fb->buf, fb->len);
+    buttonPressed = false;
+  }
 
   // Turn off flash
   digitalWrite(FLASH_GPIO_NUM, LOW);
+  delay(1000);
+  if (buttonPressed) {
+    notifyClients(fb->buf, fb->len);
+    buttonPressed = false;
+  }
 }

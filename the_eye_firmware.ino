@@ -61,6 +61,6 @@ void loop() {
   if (digitalRead(BUTTON_PIN) == LOW ){
     buttonPressed = true;
     capturePhotoSaveSpiffs();
+    delay(1000);
   }
-  delay(1000);
 }
